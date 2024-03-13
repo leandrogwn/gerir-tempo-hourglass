@@ -1,0 +1,35 @@
+trigger:
+  branches:
+    include:
+    - refs/heads/main
+pool:
+  vmImage: windows-latest
+
+jobs:
+- job: Job_1
+  displayName: Agent job 1
+  steps:
+    - powershell: |
+        $collectionUri = "$($env:SYSTEM_COLLECTIONURI)"
+        $orgName = ($collectionUri -replace '^https://dev.azure.com/([^/]+)/.*$', '$1')
+        Write-Host "##vso[task.setvariable variable=ORG_NAME]$orgName"
+        Write-Host "##vso[task.setvariable variable=PROJECT_NAME]$($env:SYSTEM_TEAMPROJECT)"
+        Write-Host "##vso[task.setvariable variable=REPO_NAME]$($env:BUILD_REPOSITORY_NAME)"
+      displayName: 'Set Variables'
+
+    - task: Gitleaks@2
+      displayName: Gitleaks scan
+      inputs:
+        scanmode: all
+        taskfail: false
+        reportformat: json
+        reportname: '$(ORG_NAME);$(PROJECT_NAME);$(REPO_NAME)'
+
+    - task: AzureFileCopy@2
+      displayName: AzureBlob File Copy
+      inputs:
+        SourcePath: '$(Agent.TempDirectory)/$(ORG_NAME);$(PROJECT_NAME);$(REPO_NAME).json'
+        azureSubscription: 'SC_UPLOAD_GITLEAKSREPORTS'
+        Destination: 'AzureBlob'
+        storage: 'stogitleaks'
+        ContainerName: 'gitleaksreports'

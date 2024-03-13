@@ -1,0 +1,51 @@
+﻿@model IEnumerable<ApplicationRoleListViewModel>
+@using HourglassAzure.Models
+@{
+    ViewData["Title"] = "Perfis";
+}
+
+<div class="top-buffer"></div>
+<div class="panel panel-primary" style="margin-top:15px;">
+    <div class="panel-heading panel-head">Gerenciar perfis de usuários</div>
+    <div class="panel-body">
+        <div class="btn-group" style="margin-bottom:15px;">
+            <a id="createRoleModal" data-toggle="modal" asp-action="AddEditApplicationRole" data-target="#modal-action-application-role" class="btn btn-primary">
+                <i class="glyphicon glyphicon-plus"></i>  Adicionar Perfil
+            </a>
+        </div>
+
+        <div class="top-buffer"></div>
+        <table class="table table-bordered table-striped table-condensed">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th width="170" class="text-center">Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td class="text-center">
+                            <a id="addEditApplicationRoleModal" data-toggle="modal" asp-action="AddEditApplicationRole" asp-route-id="@item.Id" data-target="#modal-action-application-role"
+                               class="btn btn-info">
+                                <i class="glyphicon glyphicon-pencil"></i>  Editar
+                            </a>
+                            <a id="deleteApplicationRoleModal" data-toggle="modal" asp-action="DeleteApplicationRole" asp-route-id="@item.Id" data-target="#modal-action-application-role" class="btn btn-danger">
+                                <i class="glyphicon glyphicon-trash"></i>  Deletar
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@Html.Partial("_Modal", new BootstrapModel { ID = "modal-action-application-role", AreaLabeledId = "modal-action-application-role-label", Size = ModalSize.Medium })
+
+@section scripts
+    {
+    <script src="~/js/application-role-index.js" asp-append-version="true"></script>
+}

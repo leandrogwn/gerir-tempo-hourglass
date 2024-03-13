@@ -1,0 +1,299 @@
+﻿@using Microsoft.AspNetCore.Identity
+@namespace ContactManager.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+
+@using X.PagedList.Mvc.Core
+@model HourglassAzure.Models.TramiteViewModel
+
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewBag.Title = "Equipe";
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <h2>Gerenciamento de tramites - PMO/SM</h2>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script type="text/javascript" src="~/js/moment.min.js"></script>
+    <script type="text/javascript" src="~/js/daterangepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/css/daterangerpicker.css" />
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+
+    @using (Html.BeginForm("Index", "PmoTramites", FormMethod.Get))
+    {
+        <div>
+            <div style="float: left">
+                <a asp-action="Create">
+                    <div class="form-group input-group" style="text-align:center; background-color: aliceblue; border-radius:4px; padding:3px;">
+                        <i class="glyphicon glyphicon-plus"></i><br />Criar novo
+                    </div>
+                </a>
+            </div>
+            <div style="float:right">
+                <div id="reportrange" class="form-control" style="float:left; background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; margin-right:10px; width: 210px;">
+                    <i class="fa fa-calendar"></i>&nbsp;
+                    <span id="teste"></span> <i class="fa fa-caret-down"></i>
+                </div>
+
+                <div class="form-group input-group" style="float:right!important; width:330px;">
+                    <input type="text" name="Lista" id="Lista" style="width:50px;" class="form-control" value="10" title="Quantidade de linhas por página" />
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                    <input name="SearchString" id="SearchString" onfocus="this.selectionStart = this.selectionEnd = this.value.length;" style="width:300px; float:right!important; padding:5px;" value="@ViewBag.CurrentFilter" placeholder="Procurar em: projeto, sprint, tarefa, pbi, time, título" type="text" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" title="Consultar tramites" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </span>
+                </div>
+                <input type="hidden" name="strt" id="strt" />
+                <input type="hidden" name="end" id="end" />
+            </div>
+        </div>
+    }
+
+    <table class="table">
+        <thead>
+        </thead>
+        <tbody>
+            @{
+                List<double> lstHrs = new List<double> { };
+                foreach (var li in Model.Itens)
+                {
+                    TimeSpan intervalo = (li.Tramite.HoraFim - li.Tramite.HoraInicio);
+                    lstHrs.Add(intervalo.TotalHours);
+                }
+
+                decimal xu = Convert.ToDecimal(lstHrs.Sum());
+            }
+
+            @if (Math.Round(xu, 2) != 0)
+            {
+
+                <div style="color:#fff; background-image: url(/images/lnr-clock.png); background-repeat:no-repeat; background-size:50px; background-position:right; margin-left:70px; width:150px;  border-radius:4px; padding:3px; background-color:#00acc1;">
+                    Horas no período<br />
+                    @Math.Round(xu, 2) h
+                </div>
+            }
+
+            @foreach (var group in Model.Itens.GroupBy(x => x.Tramite.Tarefa))
+            {
+                <tr class="group-header" style="background-color:aliceblue;">
+                    <td colspan="10">
+                        <p style="font-size:15.5px;">
+                            Tarefa @group.Key -
+                            @foreach (var i in group)
+                            {
+                                @Html.DisplayFor(modelItem => i.Tramite.Titulo)<br />
+                                <span>Projeto/time: </span>@Html.DisplayFor(modelItem => i.Tramite.Projeto) <span>  |  </span>
+
+                                var y = i.Tramite.Time.Split('\\').Last();
+
+                                @Html.DisplayFor(modelItem => y)
+                                break;
+                            }
+                        </p>
+                        <span class="label label-info" style="font-size: 13px; font-weight:100;">Tramites: @group.Count()</span>
+                        <span class="label label-success" style="font-size: 13px; font-weight:100;">
+                            Horas tramitadas:
+                            @Math.Round(group.Sum(x => x.Tramite.HoraFim.Subtract(x.Tramite.HoraInicio).TotalHours), 2)h
+                        </span>
+                    </td>
+
+                </tr>
+                <tr class="header-itens">
+                    <th>
+                        Usuário
+                    </th>
+
+                    <th>
+                        Sprint
+                    </th>
+                    <th>
+                        Pbi
+                    </th>
+
+                    <th>
+                        Hora Início
+                    </th>
+                    <th>
+                        Hora Fim
+                    </th>
+                    <th>
+                        Tempo
+                    </th>
+                    <th width="130px;">
+                        Obs
+                    </th>
+                    <th width="160px;"></th>
+                </tr>
+                @foreach (var item in group)
+                {
+
+                    <tr class="header-itens">
+                        <td>
+                            @{
+                                var e = item.Tramite.Email.Split('@').First();
+                            }
+                            @Html.DisplayFor(modelItem => e)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Tramite.Sprint)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Tramite.Pbi)
+                        </td>
+
+                        <td>
+                            @{ string dtHI = String.Format("{0:dd/MM/yyyy HH:mm}", item.Tramite.HoraInicio); }
+
+                            @Html.DisplayFor(modelItem => dtHI)
+                        </td>
+                        <td>
+                            @{ string dtHF = String.Format("{0:dd/MM/yyyy HH:mm}", item.Tramite.HoraFim); }
+                            @Html.DisplayFor(modelItem => dtHF)
+                        </td>
+                        <td>
+                            @item.Tramite.HoraFim.Subtract(item.Tramite.HoraInicio)
+
+                        </td>
+                        <td>
+                            @if (item.Tramite.OrigemTramite.Equals(false))
+                            {
+                                <img src="~/images/m.png" style="width: 16px; border-radius:5px;" title="Manual" />
+                            }
+
+                            @if (item.Tramite.TramiteEditado.Equals(true))
+                            {
+                                <a data-toggle="collapse" href="#collapse-alt-@item.Tramite.TramiteID" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                    <img src="~/images/e.png" style="width: 16px; border-radius:5px;" title="Editado" />
+                                </a>
+                            }
+                            @if (!string.IsNullOrEmpty(item.Tramite.Obs))
+                            {
+                                <a href="#" data-toggle="tooltip" title="@item.Tramite.Obs"><img src="~/images/coment.png" /></a>
+                            }
+                        </td>
+                        <td>
+
+                            @if (User.IsInRole("Pmo/Scrum"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.Tramite.TramiteID">Editar</a>
+                                @("|")
+
+                                <a asp-action="Details" asp-route-id="@item.Tramite.TramiteID">Detalhes</a>
+                                @("|")
+                                <a asp-action="Delete" asp-route-id="@item.Tramite.TramiteID">Excluir</a>
+                            }
+                        </td>
+                    </tr>
+                    <tr class="hide_all">
+                        <td colspan="8">
+                            <div class="collapse" id="collapse-alt-@item.Tramite.TramiteID">
+                                <div class="card card-body">
+                                    <table class="table table-bordered table-striped" style="border-radius:8px!important;">
+                                        <tr style="background-color:#9481A6; color:#fff;">
+                                            <td style="width:150px;">Data alteração</td>
+                                            <td style="width:150px;">Alterado por</td>
+                                            <td style="width:150px;">Hora início</td>
+                                            <td style="width:150px;">Hora fim</td>
+                                            <td>Observação</td>
+                                        </tr>
+                                        @foreach (var obs in item.DePara)
+                                        {
+                                            var em = obs.Email.Split('@').First();
+                                        <tr>
+                                            <td>
+                                                @{ string dtAlt = String.Format("{0:dd/MM/yyyy HH:mm}", obs.DataAlteracao); }
+                                                @dtAlt
+                                            </td>
+                                            <td>@em</td>
+                                            <td>
+                                                @{ string dtAltHI = String.Format("{0:dd/MM/yyyy HH:mm}", obs.HoraInicio); }
+                                                @dtAltHI
+                                            </td>
+                                            <td>
+                                                @{ string dtAltHF = String.Format("{0:dd/MM/yyyy HH:mm}", obs.HoraFim); }
+                                                @dtAltHF
+                                            </td>
+                                            <td>@obs.Obs</td>
+                                        </tr>
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+
+                }
+
+            }
+
+        </tbody>
+    </table>
+
+    <br />
+    <div>
+        <div style="float: right">
+            Página @Model.Itens.PageNumber de @Model.Itens.PageCount
+        </div>
+        <div class="justify-content-center">
+            @Html.PagedListPager(Model.Itens, page => Url.Action("Index", new { page = page, currentFilter = ViewBag.CurrentFilter, strt = ViewBag.Strt, end = ViewBag.End, lista = ViewBag.Lista }))
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+               $('[data-toggle="tooltip"]').tooltip();
+
+            var start = moment();
+            var end = moment();
+
+            function cb(start, end) {
+                $('#reportrange span').html(start.format("DD/MM/YYYY") + ' - ' + end.format("DD/MM/YYYY"));
+                document.getElementById('strt').value = start.format("MM/DD/YYYY 00:00");
+                document.getElementById('end').value = end.format("MM/DD/YYYY 23:59");
+                console.log(start.format("DD/MM/YYYY") + ' - ' + end.format("DD/MM/YYYY"));
+
+            }
+
+            $('#reportrange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Hoje': [moment(), moment()],
+                    'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+                    'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+                    'Esse mês': [moment().startOf('month'), moment().endOf('month')],
+                    'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+            }, cb);
+
+            cb(moment('@ViewBag.Strt', 'MM/DD/YYYY'), moment('@ViewBag.End', 'MM/DD/YYYY'));
+
+            $('#SearchString').on('keyup', function () {
+                setTimeout(function () {
+                    $('form').submit();
+                }, 700);
+            });
+            document.getElementById('SearchString').focus();
+        });
+    </script>
+}
+else
+{
+    <br />
+    <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <h4>Advertência!</h4>
+        Você precisa estar logado para ter acesso ao gerenciamento dos tramites.
+    </div>
+}

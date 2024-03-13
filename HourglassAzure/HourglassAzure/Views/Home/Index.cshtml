@@ -1,0 +1,98 @@
+﻿
+@using Microsoft.AspNetCore.Identity
+@using HourglassAzure.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@model ICollection<HourglassAzure.Models.Tramite>
+
+@if (SignInManager.IsSignedIn(User))
+{
+    ViewData["Title"] = "Linx Time";
+
+
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <a href="Tramites">
+                <div style="background-image:url(/images/lnr-cloud-check.png); background-repeat: no-repeat; background-size:150px; border-radius:8px; background-color: #3598dc; color:#fff; padding: 10px; min-height:150px;">
+                    <p>Qtd tramites realizados</p>
+                    <h2 class="text-right" style="padding:10px;">
+                        @Model.Count()
+                        tramites
+                    </h2>
+
+
+                </div>
+            </a>
+
+
+        </div>
+
+
+        <div class="col-md-3">
+            <div style="background-image:url(/images/lnr-clock.png); background-repeat: no-repeat; background-color: #00acc1; color:#fff; padding: 10px;  min-height:150px; border-radius:8px; ">
+                <p>Qtd de projetos envolvidos</p>
+                <h2 class="text-right" style="padding:10px;">
+                    @{
+                        List<String> lst = new List<string> { };
+                        foreach (var li in Model)
+                        {
+                            lst.Add(li.Projeto);
+                        }
+                        int res = lst.Distinct().Count();
+                    }
+                    @res
+                    projetos
+                </h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div style="background-image:url(/images/lnr-history.png); background-repeat: no-repeat; background-color: #087766; color:#fff; padding: 10px;  min-height:150px; border-radius:8px; ">
+                <p>Tempo diário</p>
+                <h2 class="text-right" style="padding:10px;">
+                    @{
+                        List<double> lstHrsDia = new List<double> { };
+                        foreach (var li in Model.Where(m => m.HoraInicio.ToString("dd/MM/yyyy") == DateTime.Now.ToString("dd/MM/yyyy")))
+                        {
+                            TimeSpan intervalo = (li.HoraFim - li.HoraInicio);
+                            lstHrsDia.Add(intervalo.TotalHours);
+                        }
+
+                        decimal y = Convert.ToDecimal(lstHrsDia.Sum());
+
+                        string totalHorasDia = Convert.ToString(y.ToString("N0"));
+                    }
+                    @totalHorasDia h
+                </h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div style="background-image:url(/images/lnr-chart-bars.png); background-repeat: no-repeat; background-color: #4caf50; color:#fff; padding: 10px;  min-height:150px; border-radius:8px; ">
+                <p>Tempo total</p>
+                <h2 class="text-right" style="padding:10px;">
+                    @{
+                        List<double> lstHrs = new List<double> { };
+                        foreach (var li in Model)
+                        {
+                            TimeSpan intervalo = (li.HoraFim - li.HoraInicio);
+                            lstHrs.Add(intervalo.TotalHours);
+                        }
+
+                        decimal x = Convert.ToDecimal(lstHrs.Sum());
+
+                        string totalHoras = Convert.ToString(x.ToString("N0"));
+                    }
+                    @totalHoras h
+                </h2>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="text-center col-md-12" style="margin-top:250px;">
+        <img src="~/images/hourglass128.png" />
+    </div>
+}

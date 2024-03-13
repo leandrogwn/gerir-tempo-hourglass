@@ -1,0 +1,88 @@
+﻿@model HourglassAzure.Models.Tramite
+
+@{
+    ViewData["Title"] = "Editar";
+}
+
+<h2>Editar</h2>
+
+<h4>Tramite</h4>
+<hr />
+<!-- Include English language -->
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="TramiteID" />
+            <input type="hidden" asp-for="OrigemTramite" class="form-control" />
+            <input type="hidden" asp-for="Email" class="form-control" />
+            <div class="form-group">
+                <label asp-for="Time" class="control-label"></label>
+                <input asp-for="Time" class="form-control" />
+                <span asp-validation-for="Time" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Atividade" class="control-label"></label>
+                <input asp-for="Atividade" class="form-control" />
+                <span asp-validation-for="Atividade" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Retrabalho" class="control-label"></label>
+                <input asp-for="Retrabalho" class="form-control" />
+                <span asp-validation-for="Retrabalho" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Projeto" class="control-label"></label>
+                <input asp-for="Projeto" class="form-control" />
+                <span asp-validation-for="Projeto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sprint" class="control-label"></label>
+                <input asp-for="Sprint" class="form-control" />
+                <span asp-validation-for="Sprint" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Pbi" class="control-label"></label>
+                <input asp-for="Pbi" class="form-control" />
+                <span asp-validation-for="Pbi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tarefa" class="control-label"></label>
+                <input asp-for="Tarefa" class="form-control" />
+                <span asp-validation-for="Tarefa" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Titulo" class="control-label"></label>
+                <input asp-for="Titulo" class="form-control" />
+                <span asp-validation-for="Titulo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Hora Início</label>
+                <input asp-for="HoraInicio" class="form-control" />
+                <span asp-validation-for="HoraInicio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Hora Fim</label>
+                <input asp-for="HoraFim" class="form-control" />
+                <span asp-validation-for="HoraFim" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Obs" class="control-label"></label>
+                <textarea asp-for="Obs" class="form-control"></textarea>
+                <span asp-validation-for="Obs" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="TramiteEditado" value="True" />
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-default" />
+            </div>
+        </form>
+</div>
+</div>
+
+<div>
+    <a asp-action="Index">Voltar para lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

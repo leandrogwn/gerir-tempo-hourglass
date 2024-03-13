@@ -1,0 +1,52 @@
+﻿@model IEnumerable<UserListViewModel>
+@using HourglassAzure.Models
+@{
+    ViewData["Title"] = "Usuários";
+}
+
+    <div class="top-buffer"></div>
+    <div class="panel panel-primary" style="margin-top:15px;">
+        <div class="panel-heading panel-head">Gerenciar Usuários</div>
+        <div class="panel-body">
+            <div class="btn-group" style="margin-bottom:15px;">
+                <a id="createEditUserModal" data-toggle="modal" asp-action="AddUser" data-target="#modal-action-user" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-plus"></i> Adicionar Usuário
+                </a>
+            </div>
+            <div class="top-buffer"></div>
+            <table class="table table-bordered table-striped table-condensed">
+                <thead>
+                    <tr>
+                        <th>Nome de usuário</th>
+                        <th width="200">Perfil</th>
+                        <th width="170" class="text-center">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.RoleName</td>
+                            <td>
+                                <a id="editUserModal" data-toggle="modal" asp-action="EditUser" asp-route-id="@item.Id" data-target="#modal-action-user"
+                                   class="btn btn-info">
+                                    <i class="glyphicon glyphicon-pencil"></i>  Editar
+                                </a>
+                                <a id="deleteUserModal" data-toggle="modal" asp-action="DeleteUser" asp-route-id="@item.Id" data-target="#modal-action-user" class="btn btn-danger">
+                                    <i class="glyphicon glyphicon-trash"></i>  Deletar
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @Html.Partial("_Modal", new BootstrapModel { ID = "modal-action-user", AreaLabeledId = "modal-action-user-label", Size = ModalSize.Medium })
+
+    @section scripts
+        {
+        <script src="~/js/user-index.js" asp-append-version="true"></script>
+    }

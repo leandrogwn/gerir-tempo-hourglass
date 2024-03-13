@@ -1,0 +1,84 @@
+﻿@model HourglassAzure.Models.Tramite
+
+@{
+    ViewData["Title"] = "Detalhes";
+}
+
+<h2>Detalhes</h2>
+
+<div>
+    <h4>Tramite</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Projeto)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Projeto)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Time)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Time)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Atividade)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Atividade)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Retrabalho)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Retrabalho)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Sprint)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Sprint)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Pbi)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Pbi)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Tarefa)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Tarefa)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Titulo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Titulo)
+        </dd>
+        <dt>
+            Hora Início
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.HoraInicio)
+        </dd>
+        <dt>
+            Hora Fim
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.HoraFim)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Obs)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Obs)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.TramiteID">Editar</a> |
+    <a asp-action="Index">Voltar para lista</a>
+</div>

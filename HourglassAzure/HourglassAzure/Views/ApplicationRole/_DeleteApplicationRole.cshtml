@@ -1,0 +1,12 @@
+﻿@model string
+@using HourglassAzure.Models
+
+<form asp-action="DeleteApplicationRole" role="form">
+    @Html.Partial("_ModalHeader", new ModalHeader { Heading = "Apagar perfil de usuário" })
+
+    <div class="modal-body form-horizontal">
+        Deseja deletar o perfil <b>@Model</b>?
+    </div>
+    @Html.Partial("_ModalFooter", new ModalFooter { SubmitButtonText = "Delete" })
+</form>
+

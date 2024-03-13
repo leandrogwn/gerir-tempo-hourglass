@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <UserSecretsId>aspnet-HourglassAzure-73FC4B2A-1B98-49B8-BAF0-F0357CAEF561</UserSecretsId>
+    <StartupObject></StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\TramiteDeParaController.cs" />
+    <Compile Remove="Migrations\20190415135532_TabelaDePara.cs" />
+    <Compile Remove="Migrations\20190415135532_TabelaDePara.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\js\JavaScript.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="dist\js\daterangepicker.js" />
+    <None Remove="dist\js\moment.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="dist\js\daterangepicker.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="dist\js\moment.min.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="bootstrap.daterangepicker" Version="2.1.24.1" />
+    <PackageReference Include="JQueryDateRangePicker" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.3" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.NET.Sdk.Razor" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.4" />
+    <PackageReference Include="Sendgrid" Version="9.10.0" />
+    <PackageReference Include="System.Net.Http.Formatting.Extension" Version="5.2.3" />
+    
+    <PackageReference Include="PagedList" Version="1.17.0" />
+    <PackageReference Include="X.PagedList" Version="7.6.0" />
+    <PackageReference Include="X.PagedList.Mvc" Version="7.6.0" />
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="7.5.0" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.3" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.2" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.4" />
+    
+</ItemGroup>
+
+</Project>
